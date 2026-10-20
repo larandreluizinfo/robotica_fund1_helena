@@ -2,9 +2,9 @@
 
 Projeto de robótica do Fundamental 1.
 
-## Site
+## 🌐 Site
 
-Em breve o link do GitHub Pages estará aqui.
+**[https://larandreluizinfo.github.io/robotica_fund1_helena/](https://larandreluizinfo.github.io/robotica_fund1_helena/)**
 
 ## Criado por
 
