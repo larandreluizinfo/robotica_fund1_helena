@@ -828,7 +828,8 @@
       spawnGap -= move;
       if (spawnGap <= 0) {
         spawnObstacle();
-        spawnGap = rand(300, 520) * (1 - Math.min(0.28, elapsed * 0.0009));
+        // mantem o tempo de reacao justo mesmo com a velocidade alta
+        spawnGap = speed * 46 + rand(30, 160);
       }
 
       for (const o of obstacles) {
