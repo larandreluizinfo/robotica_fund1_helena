@@ -5,43 +5,161 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>robotica</title>
   <style>
-    :root { color-scheme: light dark; }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       min-height: 100vh;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at 20% 0%, #1d3557 0%, #0b1220 55%, #070b14 100%);
+      color: #e8eefc;
+      padding: clamp(1.5rem, 5vw, 4rem) 1.25rem;
+    }
+    .wrap { max-width: 1000px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 2.5rem; }
+    h1 {
+      margin: 0 0 0.6rem;
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      letter-spacing: -0.03em;
+    }
+    h1 span { color: #4cc9f0; }
+    .sub { margin: 0; opacity: 0.7; font-size: 0.95rem; letter-spacing: 0.12em; text-transform: uppercase; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      position: relative;
+      padding: 1.75rem 1.5rem;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      overflow: hidden;
+    }
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 3px;
+      background: var(--accent);
+    }
+    .card:hover { transform: translateY(-6px); border-color: color-mix(in srgb, var(--accent) 60%, transparent); }
+    .avatar {
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 1rem;
       display: grid;
       place-items: center;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      background: linear-gradient(160deg, #14213d, #2b6cb0);
-      color: #fff;
-      padding: 2rem;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--accent) 16%, transparent);
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 40%, transparent);
     }
-    main {
-      max-width: 640px;
+    .avatar svg { width: 66px; height: 66px; }
+    h2 { margin: 0 0 0.25rem; font-size: 1.15rem; }
+    .role {
+      display: inline-block;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .desc { margin: 0; font-size: 0.9rem; line-height: 1.6; opacity: 0.75; }
+    footer {
+      margin-top: 3rem;
       text-align: center;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 20px;
-      padding: 2.5rem 2rem;
-      backdrop-filter: blur(8px);
+      font-size: 0.85rem;
+      line-height: 1.8;
+      opacity: 0.65;
     }
-    h1 { margin: 0 0 0.5rem; font-size: clamp(1.6rem, 4vw, 2.4rem); }
-    p { margin: 0.5rem 0; line-height: 1.6; opacity: 0.92; }
-    .badge { font-size: 2.5rem; margin-bottom: 0.5rem; }
-    ul { list-style: none; padding: 0; margin: 1.5rem 0 0; display: grid; gap: 0.4rem; }
-    li { font-size: 0.95rem; opacity: 0.9; }
+    footer strong { display: block; opacity: 0.9; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.72rem; margin-bottom: 0.25rem; }
   </style>
 </head>
 <body>
-  <main>
-    <div class="badge">🤖</div>
-    <h1>robotica</h1>
-    <p>Turma da Helena</p>
-    <p>Projeto em construção.</p>
-    <ul>
-      <li>Criado por Alice Navarro, Alice Frassi, Maria Luiza e Livia Furlan</li>
-    </ul>
-  </main>
+  <div class="wrap">
+    <header>
+      <h1>robotica<span>.</span></h1>
+      <p class="sub">Os 4 robôs da turma</p>
+    </header>
+
+    <section class="grid">
+      <article class="card" style="--accent:#4cc9f0">
+        <div class="avatar">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <line x1="50" y1="10" x2="50" y2="24" stroke="#4cc9f0" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="50" cy="9" r="6" fill="#4cc9f0"/>
+            <rect x="20" y="24" width="60" height="52" rx="16" fill="none" stroke="#4cc9f0" stroke-width="4"/>
+            <circle cx="38" cy="46" r="6" fill="#4cc9f0"/>
+            <circle cx="62" cy="46" r="6" fill="#4cc9f0"/>
+            <rect x="38" y="60" width="24" height="4" rx="2" fill="#4cc9f0"/>
+            <rect x="12" y="42" width="8" height="18" rx="4" fill="#4cc9f0"/>
+            <rect x="80" y="42" width="8" height="18" rx="4" fill="#4cc9f0"/>
+          </svg>
+        </div>
+        <h2>Bit</h2>
+        <span class="role">Explorador</span>
+        <p class="desc">O curioso do grupo. Gosta de descobrir como as coisas funcionam e sempre faz a primeira pergunta.</p>
+      </article>
+
+      <article class="card" style="--accent:#ff8fa3">
+        <div class="avatar">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <rect x="24" y="14" width="52" height="10" rx="5" fill="#ff8fa3"/>
+            <rect x="20" y="28" width="60" height="50" rx="18" fill="none" stroke="#ff8fa3" stroke-width="4"/>
+            <circle cx="38" cy="50" r="7" fill="#ff8fa3"/>
+            <circle cx="62" cy="50" r="7" fill="#ff8fa3"/>
+            <path d="M38 64 Q50 72 62 64" fill="none" stroke="#ff8fa3" stroke-width="4" stroke-linecap="round"/>
+            <rect x="30" y="86" width="40" height="6" rx="3" fill="#ff8fa3"/>
+          </svg>
+        </div>
+        <h2>Lumi</h2>
+        <span class="role">Comunicadora</span>
+        <p class="desc">Adora conversar com a turma. Acende as luzes para chamar atenção e explica tudo com calma.</p>
+      </article>
+
+      <article class="card" style="--accent:#ffd166">
+        <div class="avatar">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <path d="M34 20 L50 8 L66 20" fill="none" stroke="#ffd166" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="50" cy="8" r="5" fill="#ffd166"/>
+            <rect x="18" y="20" width="64" height="56" rx="14" fill="none" stroke="#ffd166" stroke-width="4"/>
+            <rect x="30" y="36" width="40" height="10" rx="5" fill="#ffd166"/>
+            <circle cx="36" cy="58" r="5" fill="#ffd166"/>
+            <circle cx="50" cy="58" r="5" fill="#ffd166"/>
+            <circle cx="64" cy="58" r="5" fill="#ffd166"/>
+            <path d="M34 84 L50 76 L66 84" fill="none" stroke="#ffd166" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h2>Bolt</h2>
+        <span class="role">Construtor</span>
+        <p class="desc">O braço forte da equipe. Monta, desmonta e testa peças até tudo se encaixar direitinho.</p>
+      </article>
+
+      <article class="card" style="--accent:#8ce99a">
+        <div class="avatar">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="16" r="7" fill="#8ce99a"/>
+            <rect x="2" y="4" width="12" height="24" rx="6" fill="#8ce99a" opacity="0.6"/>
+            <rect x="86" y="4" width="12" height="24" rx="6" fill="#8ce99a" opacity="0.6"/>
+            <rect x="20" y="26" width="60" height="48" rx="20" fill="none" stroke="#8ce99a" stroke-width="4"/>
+            <circle cx="38" cy="46" r="6" fill="#8ce99a"/>
+            <circle cx="62" cy="46" r="6" fill="#8ce99a"/>
+            <rect x="40" y="62" width="20" height="4" rx="2" fill="#8ce99a"/>
+            <rect x="34" y="82" width="32" height="10" rx="5" fill="none" stroke="#8ce99a" stroke-width="4"/>
+          </svg>
+        </div>
+        <h2>Zeta</h2>
+        <span class="role">Programadora</span>
+        <p class="desc">Pensa em passos. Escreve o código, procura o erro e comemora quando o robô faz o que devia.</p>
+      </article>
+    </section>
+
+    <footer>
+      <strong>Criado por</strong>
+      Alice Navarro · Alice Frassi · Maria Luiza · Livia Furlan
+    </footer>
+  </div>
 </body>
 </html>
