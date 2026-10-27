@@ -12,7 +12,7 @@ Corrida em **primeira pessoa** em 3D por um mundo robótico. Em cada nível é p
 
 ## Regra do grupo
 
-Todas as pessoas do time jogam juntas: os **4 robôs se revezam**, um por nível. Os quatro precisam ajudar a equipe a chegar ao nível 50. Cada robô tem um poder de equipe:
+Todas as pessoas do time jogam juntas: os **4 robôs se revezam**, um por nível. Os quatro precisam ajudar a equipe a chegar ao nível 50. Durante a vez de cada robô, ele aparece **inteiro no canto da tela**, com a cor e a personalidade dele. Cada robô tem um poder de equipe:
 
 | Robô | Cor | Personalidade | Poder |
 | --- | --- | --- | --- |
