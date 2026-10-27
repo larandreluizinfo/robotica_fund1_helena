@@ -34,8 +34,8 @@
     touch-action: none;
     cursor: pointer;
   }
+  .actions { position: absolute; right: 14px; bottom: 14px; display: flex; gap: 8px; }
   .fly {
-    position: absolute; right: 14px; bottom: 14px;
     padding: 0.75rem 1.15rem; border-radius: 999px; cursor: pointer;
     background: rgba(0, 240, 255, 0.16);
     border: 1px solid rgba(0, 240, 255, 0.6);
@@ -46,12 +46,83 @@
     transition: background 0.15s ease, transform 0.1s ease;
   }
   .fly:active, .fly.on { background: rgba(0, 240, 255, 0.42); transform: scale(0.97); }
+  .slash {
+    background: rgba(255, 209, 102, 0.14);
+    border-color: rgba(255, 209, 102, 0.6);
+    color: #ffe9a8;
+  }
+  .slash:active { background: rgba(255, 209, 102, 0.4); transform: scale(0.97); }
+  .slash[disabled] { opacity: 0.35; cursor: default; }
 
   .controls {
     display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem 1.25rem;
     margin-top: 0.9rem; font-size: 0.76rem; color: rgba(232, 238, 252, 0.55);
   }
   .controls b { color: #bff8ff; font-weight: 700; }
+
+  .topbar {
+    display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+    gap: 0.55rem 0.9rem; margin-top: 1rem; font-size: 0.78rem;
+  }
+  .coin-badge, .group-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.4rem 0.8rem; border-radius: 999px; font-weight: 700;
+  }
+  .coin-badge {
+    background: rgba(255, 209, 102, 0.1);
+    border: 1px solid rgba(255, 209, 102, 0.35); color: #ffd166;
+  }
+  .group-badge {
+    background: rgba(167, 139, 250, 0.1);
+    border: 1px solid rgba(167, 139, 250, 0.35); color: #c9b6ff;
+  }
+  .shop-toggle {
+    padding: 0.5rem 1rem; border-radius: 999px; cursor: pointer;
+    border: 1px solid rgba(0, 240, 255, 0.5);
+    background: rgba(0, 240, 255, 0.12);
+    color: #bff8ff; font: 700 0.72rem/1 system-ui, sans-serif;
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .shop-toggle:hover { background: rgba(0, 240, 255, 0.22); }
+
+  .shop {
+    margin-top: 1rem; padding: 1.15rem; border-radius: 20px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(0, 240, 255, 0.25);
+  }
+  .shop[hidden] { display: none; }
+  .shop-head {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline;
+    gap: 0.5rem 1rem; margin-bottom: 0.4rem;
+  }
+  .shop-head h2 { margin: 0; }
+  .shop-hint { margin: 0 0 0.9rem; font-size: 0.78rem; color: rgba(232, 238, 252, 0.55); }
+  .shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 0.7rem; }
+  .item {
+    display: flex; flex-direction: column; gap: 0.35rem; padding: 0.85rem;
+    border-radius: 14px; background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+  }
+  .item h3 { margin: 0; font-size: 0.9rem; }
+  .item .price { color: #ffd166; font-weight: 700; font-size: 0.8rem; }
+  .item .owned { color: rgba(232, 238, 252, 0.5); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; }
+  .item p { margin: 0; font-size: 0.74rem; line-height: 1.45; opacity: 0.7; flex: 1; }
+  .buy {
+    margin-top: 0.35rem; padding: 0.5rem; border-radius: 10px; cursor: pointer;
+    border: 1px solid rgba(0, 240, 255, 0.45);
+    background: rgba(0, 240, 255, 0.13);
+    color: #bff8ff; font: 700 0.7rem/1 system-ui, sans-serif;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .buy:hover:not(:disabled) { background: rgba(0, 240, 255, 0.26); }
+  .buy:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .card.active {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 14%, transparent), rgba(255,255,255,0.02));
+    border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    box-shadow: 0 0 34px -14px var(--accent);
+  }
+  .card.active .role::after { content: " · jogando agora"; }
 
   section { margin-top: 2rem; }
   h2 {
@@ -110,99 +181,120 @@
 
   <div class="stage">
     <canvas id="game" width="900" height="520"
-      aria-label="Jogo em primeira pessoa: voe pelo mundo robótico, colete as 6 peças e chegue ao final"></canvas>
-    <button id="fly" class="fly" type="button" aria-label="Voar">▲ Voar</button>
+      aria-label="Jogo em primeira pessoa: voe pelo mundo robótico, colete todas as peças e chegue ao final"></canvas>
+    <div class="actions">
+      <button id="slash" class="fly slash" type="button" aria-label="Usar espada" disabled>Espada</button>
+      <button id="fly" class="fly" type="button" aria-label="Voar">▲ Voar</button>
+    </div>
   </div>
 
   <div class="controls">
     <span><b>← →</b> ou <b>A D</b> desviam</span>
-    <span><b>ESPAÇO</b> voa por 3 s</span>
-    <span>no celular, arraste para desviar e segure <b>VOAR</b></span>
+    <span><b>ESPAÇO</b> voa por 5 s</span>
+    <span><b>X</b> corta com a espada</span>
+    <span>no celular, arraste e use os botões</span>
   </div>
+
+  <div class="topbar">
+    <span class="coin-badge">Parafusos: <b id="coinCount">0</b></span>
+    <span class="group-badge">Modo grupo · os 4 robôs jogam</span>
+    <button id="shopToggle" class="shop-toggle" type="button">Loja do time</button>
+  </div>
+
+  <section id="shop" class="shop" hidden>
+    <div class="shop-head">
+      <h2>Loja do time</h2>
+      <span class="coin-badge">Saldo: <b id="shopCoins">0</b> parafusos</span>
+    </div>
+    <p class="shop-hint">Ganhe parafusos caçando peças e concluindo níveis. As melhorias ficam salvas neste navegador.</p>
+    <div class="shop-grid" id="shopGrid"></div>
+  </section>
 
   <section>
     <h2>Missão</h2>
     <div class="chips">
       <span class="chip"><span class="dot" style="color:#a78bfa;background:#a78bfa"></span> 50 níveis</span>
       <span class="chip"><span class="dot" style="color:#ffd166;background:#ffd166"></span> 5 a 9 peças por nível</span>
-      <span class="chip"><span class="dot" style="color:#ff2e88;background:#ff2e88"></span> 3 vidas por nível</span>
-      <span class="chip"><span class="dot" style="color:#4cc9f0;background:#4cc9f0"></span> 3 s de voo por carga</span>
+      <span class="chip"><span class="dot" style="color:#ff2e88;background:#ff2e88"></span> 3 vidas iniciais</span>
+      <span class="chip"><span class="dot" style="color:#4cc9f0;background:#4cc9f0"></span> 5 s de voo por carga</span>
       <span class="chip"><span class="dot" style="color:#ff8c42;background:#ff8c42"></span> Dificuldade sobe a cada 10 níveis</span>
       <span class="chip"><span class="dot" style="color:#8ce99a;background:#8ce99a"></span> Caminhos cada vez mais longos</span>
+      <span class="chip"><span class="dot" style="color:#2ee6c8;background:#2ee6c8"></span> Os 4 robôs jogam em grupo, um por nível</span>
+      <span class="chip"><span class="dot" style="color:#ff8fb1;background:#ff8fb1"></span> Loja: espada, escudo, armadura, vidas e asa nova</span>
     </div>
   </section>
 
   <section>
     <h2>Personagens</h2>
     <div class="grid">
-      <article class="card" style="--accent:#4cc9f0">
+      <article class="card" style="--accent:#2ee6c8" data-robot="0">
         <div class="avatar">
           <svg viewBox="0 0 100 100" aria-hidden="true">
-            <line x1="50" y1="10" x2="50" y2="24" stroke="#4cc9f0" stroke-width="4" stroke-linecap="round"/>
-            <circle cx="50" cy="9" r="6" fill="#4cc9f0"/>
-            <rect x="20" y="24" width="60" height="52" rx="16" fill="none" stroke="#4cc9f0" stroke-width="4"/>
-            <circle cx="38" cy="46" r="6" fill="#4cc9f0"/>
-            <circle cx="62" cy="46" r="6" fill="#4cc9f0"/>
-            <rect x="38" y="60" width="24" height="4" rx="2" fill="#4cc9f0"/>
-            <rect x="12" y="42" width="8" height="18" rx="4" fill="#4cc9f0"/>
-            <rect x="80" y="42" width="8" height="18" rx="4" fill="#4cc9f0"/>
+            <line x1="50" y1="10" x2="50" y2="24" stroke="#2ee6c8" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="50" cy="9" r="6" fill="#2ee6c8"/>
+            <rect x="20" y="24" width="60" height="52" rx="16" fill="none" stroke="#2ee6c8" stroke-width="4"/>
+            <circle cx="38" cy="46" r="6" fill="#2ee6c8"/>
+            <circle cx="62" cy="46" r="6" fill="#2ee6c8"/>
+            <rect x="38" y="60" width="24" height="4" rx="2" fill="#2ee6c8"/>
+            <rect x="12" y="42" width="8" height="18" rx="4" fill="#2ee6c8"/>
+            <rect x="80" y="42" width="8" height="18" rx="4" fill="#2ee6c8"/>
           </svg>
         </div>
-        <h3>Bit</h3>
-        <span class="role">Explorador · você</span>
-        <p class="desc">O curioso do grupo. É ele quem voa pela pista em primeira pessoa.</p>
+        <h3>Alice Navarro</h3>
+        <span class="role">Inteligente</span>
+        <p class="desc">Robô verde-água que calcula a rota e enxerga as peças de mais longe.</p>
       </article>
 
-      <article class="card" style="--accent:#ff8fa3">
+      <article class="card" style="--accent:#ff8fb1" data-robot="1">
         <div class="avatar">
           <svg viewBox="0 0 100 100" aria-hidden="true">
-            <rect x="24" y="14" width="52" height="10" rx="5" fill="#ff8fa3"/>
-            <rect x="20" y="28" width="60" height="50" rx="18" fill="none" stroke="#ff8fa3" stroke-width="4"/>
-            <circle cx="38" cy="50" r="7" fill="#ff8fa3"/>
-            <circle cx="62" cy="50" r="7" fill="#ff8fa3"/>
-            <path d="M38 64 Q50 72 62 64" fill="none" stroke="#ff8fa3" stroke-width="4" stroke-linecap="round"/>
-            <rect x="30" y="86" width="40" height="6" rx="3" fill="#ff8fa3"/>
+            <rect x="24" y="14" width="52" height="10" rx="5" fill="#ff8fb1"/>
+            <rect x="20" y="28" width="60" height="50" rx="18" fill="none" stroke="#ff8fb1" stroke-width="4"/>
+            <circle cx="38" cy="50" r="7" fill="#ff8fb1"/>
+            <circle cx="62" cy="50" r="7" fill="#ff8fb1"/>
+            <path d="M38 64 Q50 72 62 64" fill="none" stroke="#ff8fb1" stroke-width="4" stroke-linecap="round"/>
+            <rect x="30" y="86" width="40" height="6" rx="3" fill="#ff8fb1"/>
           </svg>
         </div>
-        <h3>Lumi</h3>
-        <span class="role">Comunicadora</span>
-        <p class="desc">Acende as luzes e avisa onde estão as peças escondidas.</p>
+        <h3>Alice Frassi</h3>
+        <span class="role">Carinhosa</span>
+        <p class="desc">Robô rosa que cuida do time e começa cada nível com uma vida extra.</p>
       </article>
 
-      <article class="card" style="--accent:#ffd166">
+      <article class="card" style="--accent:#a8e6a1" data-robot="2">
         <div class="avatar">
           <svg viewBox="0 0 100 100" aria-hidden="true">
-            <path d="M34 20 L50 8 L66 20" fill="none" stroke="#ffd166" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="50" cy="8" r="5" fill="#ffd166"/>
-            <rect x="18" y="20" width="64" height="56" rx="14" fill="none" stroke="#ffd166" stroke-width="4"/>
-            <rect x="30" y="36" width="40" height="10" rx="5" fill="#ffd166"/>
-            <circle cx="36" cy="58" r="5" fill="#ffd166"/>
-            <circle cx="50" cy="58" r="5" fill="#ffd166"/>
-            <circle cx="64" cy="58" r="5" fill="#ffd166"/>
-            <path d="M34 84 L50 76 L66 84" fill="none" stroke="#ffd166" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="50" cy="16" r="7" fill="#a8e6a1"/>
+            <rect x="2" y="4" width="12" height="24" rx="6" fill="#a8e6a1" opacity="0.6"/>
+            <rect x="86" y="4" width="12" height="24" rx="6" fill="#a8e6a1" opacity="0.6"/>
+            <rect x="20" y="26" width="60" height="48" rx="20" fill="none" stroke="#a8e6a1" stroke-width="4"/>
+            <circle cx="38" cy="46" r="6" fill="#a8e6a1"/>
+            <circle cx="62" cy="46" r="6" fill="#a8e6a1"/>
+            <rect x="40" y="62" width="20" height="4" rx="2" fill="#a8e6a1"/>
+            <rect x="34" y="82" width="32" height="10" rx="5" fill="none" stroke="#a8e6a1" stroke-width="4"/>
           </svg>
         </div>
-        <h3>Bolt</h3>
-        <span class="role">Construtor</span>
-        <p class="desc">Monta as peças que você coleta e deixa o robô mais forte.</p>
+        <h3>Livia Furlan</h3>
+        <span class="role">Gentil</span>
+        <p class="desc">Robô verde-claro que ajuda os amigos e recarrega o voo mais rápido.</p>
       </article>
 
-      <article class="card" style="--accent:#8ce99a">
+      <article class="card" style="--accent:#a78bfa" data-robot="3">
         <div class="avatar">
           <svg viewBox="0 0 100 100" aria-hidden="true">
-            <circle cx="50" cy="16" r="7" fill="#8ce99a"/>
-            <rect x="2" y="4" width="12" height="24" rx="6" fill="#8ce99a" opacity="0.6"/>
-            <rect x="86" y="4" width="12" height="24" rx="6" fill="#8ce99a" opacity="0.6"/>
-            <rect x="20" y="26" width="60" height="48" rx="20" fill="none" stroke="#8ce99a" stroke-width="4"/>
-            <circle cx="38" cy="46" r="6" fill="#8ce99a"/>
-            <circle cx="62" cy="46" r="6" fill="#8ce99a"/>
-            <rect x="40" y="62" width="20" height="4" rx="2" fill="#8ce99a"/>
-            <rect x="34" y="82" width="32" height="10" rx="5" fill="none" stroke="#8ce99a" stroke-width="4"/>
+            <path d="M34 20 L50 8 L66 20" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="50" cy="8" r="5" fill="#a78bfa"/>
+            <rect x="18" y="20" width="64" height="56" rx="14" fill="none" stroke="#a78bfa" stroke-width="4"/>
+            <rect x="30" y="36" width="40" height="10" rx="5" fill="#a78bfa"/>
+            <circle cx="36" cy="58" r="5" fill="#a78bfa"/>
+            <circle cx="50" cy="58" r="5" fill="#a78bfa"/>
+            <circle cx="64" cy="58" r="5" fill="#a78bfa"/>
+            <path d="M34 84 L50 76 L66 84" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round"/>
           </svg>
         </div>
-        <h3>Zeta</h3>
-        <span class="role">Programadora</span>
-        <p class="desc">Calcula a rota e controla o tempo de voo de 3 segundos.</p>
+        <h3>Maria Luiza</h3>
+        <span class="role">Forte</span>
+        <p class="desc">Robô roxa que protege o grupo com um escudo extra em cada nível.</p>
       </article>
     </div>
   </section>
@@ -220,6 +312,13 @@
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
   const flyBtn = document.getElementById('fly');
+  const slashBtn = document.getElementById('slash');
+  const shopToggle = document.getElementById('shopToggle');
+  const shopPanel = document.getElementById('shop');
+  const shopGrid = document.getElementById('shopGrid');
+  const coinCount = document.getElementById('coinCount');
+  const shopCoins = document.getElementById('shopCoins');
+  const cards = document.querySelectorAll('.card[data-robot]');
 
   /* ---------------- configuração ---------------- */
   const W = 900, H = 520;
@@ -229,12 +328,31 @@
   const MAX_X = 3.9;
   const TOTAL_LEVELS = 50;
   const MAX_Y = 4.6;
-  const FUEL_MAX = 3.0;
+  const FLY_BASE = 5.0;
+  const FLY_WING_BONUS = 3.0;
+  const COINS_PER_PIECE = 2;
+  const COINS_PER_LEVEL = 25;
+  const SAVE_KEY = 'robotica-save-v1';
 
   const TIER_NAMES = ['Fácil', 'Normal', 'Difícil', 'Muito difícil', 'Insano'];
 
+  const CHARACTERS = [
+    { id: 'navarro', name: 'Alice Navarro', role: 'Inteligente', color: '#2ee6c8' },
+    { id: 'frassi', name: 'Alice Frassi', role: 'Carinhosa', color: '#ff8fb1' },
+    { id: 'livia', name: 'Livia Furlan', role: 'Gentil', color: '#a8e6a1' },
+    { id: 'maria', name: 'Maria Luiza', role: 'Forte', color: '#a78bfa' }
+  ];
+
+  const SHOP_ITEMS = [
+    { id: 'sword', name: 'Espada', price: 70, max: 3, desc: 'Um golpe por nível para cada espada. Corte com X.' },
+    { id: 'shield', name: 'Escudo', price: 60, max: 3, desc: 'Cada escudo bloqueia uma batida por nível.' },
+    { id: 'armor', name: 'Armadura', price: 120, max: 2, desc: 'Ganha +1 vida no começo de todos os níveis.' },
+    { id: 'life', name: 'Vida extra', price: 40, max: 0, desc: 'Recupera 1 vida agora. Só funciona no meio do nível.' },
+    { id: 'wing', name: 'Asa nova', price: 150, max: 1, desc: 'Aumenta o voo de 5 para 8 segundos por carga.' }
+  ];
+
   const cam = { x: 0, y: 1.55, z: 0 };
-  const player = { x: 0, y: 0, z: 0, fuel: FUEL_MAX };
+  const player = { x: 0, y: 0, z: 0, fuel: FLY_BASE };
   const keys = new Set();
   const pointer = { active: false, targetX: 0 };
 
@@ -248,9 +366,34 @@
   let level = 1;
   let cfg = null;
 
+  let activeRobot = 0;
+  let coins = 0;
+  let owned = { sword: 0, shield: 0, armor: 0, wing: 0 };
+  let fuelMax = FLY_BASE;
+  let swordCharges = 0;
+  let shieldCharges = 0;
+  let levelMaxLives = 3;
+  let slashTime = 0;
+  let paused = false;
+
+  const robot = () => CHARACTERS[activeRobot];
+
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const rnd = (a, b) => a + Math.random() * (b - a);
   const frac = (v) => v - Math.floor(v);
+
+  function hexRgb(hex) {
+    const n = parseInt(hex.slice(1), 16);
+    return [n >> 16, (n >> 8) & 255, n & 255];
+  }
+  function rgba(hex, a) {
+    const [r, g, b] = hexRgb(hex);
+    return `rgba(${r}, ${g}, ${b}, ${a})`;
+  }
+  function shade(hex, f) {
+    const [r, g, b] = hexRgb(hex).map((v) => clamp(Math.round(v * f), 0, 255));
+    return `rgb(${r}, ${g}, ${b})`;
+  }
 
   /* ---------------- helpers de desenho ---------------- */
   function rr(x, y, w, h, r) {
@@ -643,23 +786,24 @@
   function drawArms() {
     const bob = Math.sin(worldTime * 1.4) * 2;
     const sway = steer * 10;
+    const color = robot().color;
 
     for (const side of [-1, 1]) {
       ctx.save();
       ctx.translate(W / 2 + side * 322 + sway, H + 92 + bob);
       ctx.rotate(side * 0.3);
       const g = ctx.createLinearGradient(0, -200, 0, 40);
-      g.addColorStop(0, '#6fe6ff');
-      g.addColorStop(0.5, '#16789a');
-      g.addColorStop(1, '#04222e');
+      g.addColorStop(0, shade(color, 1.45));
+      g.addColorStop(0.5, shade(color, 0.55));
+      g.addColorStop(1, shade(color, 0.16));
       ctx.fillStyle = g;
       rr(side < 0 ? -110 : -30, -190, 140, 260, 50);
       ctx.fill();
-      ctx.strokeStyle = 'rgba(0, 240, 255, 0.45)';
+      ctx.strokeStyle = rgba(color, 0.5);
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      ctx.fillStyle = 'rgba(0, 240, 255, 0.18)';
+      ctx.fillStyle = rgba(color, 0.2);
       rr(side < 0 ? -88 : -8, -162, 86, 34, 16);
       ctx.fill();
       ctx.restore();
@@ -668,10 +812,26 @@
     if (player.y > 0.25) {
       const a = Math.min(1, player.y / 2);
       const g = ctx.createRadialGradient(W / 2, H + 40, 10, W / 2, H + 40, 280);
-      g.addColorStop(0, `rgba(0, 240, 255, ${0.28 * a})`);
-      g.addColorStop(1, 'rgba(0, 240, 255, 0)');
+      g.addColorStop(0, rgba(color, 0.3 * a));
+      g.addColorStop(1, rgba(color, 0));
       ctx.fillStyle = g;
       ctx.fillRect(0, H - 240, W, 240);
+    }
+
+    if (slashTime > 0) {
+      const a = clamp(slashTime / 0.35, 0, 1);
+      ctx.save();
+      ctx.translate(W / 2, H / 2 + 100);
+      ctx.rotate(-0.55);
+      ctx.strokeStyle = `rgba(255, 233, 168, ${a})`;
+      ctx.lineWidth = 2 + 14 * a;
+      ctx.shadowColor = '#ffd166';
+      ctx.shadowBlur = 30;
+      ctx.beginPath();
+      ctx.moveTo(-280, 70);
+      ctx.quadraticCurveTo(0, -140, 280, 40);
+      ctx.stroke();
+      ctx.restore();
     }
   }
 
@@ -681,11 +841,21 @@
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
 
-    ctx.font = '700 24px system-ui, sans-serif';
-    for (let i = 0; i < 3; i++) {
+    const heartCount = Math.max(levelMaxLives, lives, 3);
+    const hf = heartCount > 5 ? 20 : 24;
+    ctx.font = `700 ${hf}px system-ui, sans-serif`;
+    for (let i = 0; i < heartCount; i++) {
       ctx.fillStyle = i < lives ? '#ff2e88' : 'rgba(255, 255, 255, 0.14)';
-      ctx.fillText('♥', 24 + i * 30, 44);
+      ctx.fillText('♥', 24 + i * (hf + 4), 44);
     }
+
+    ctx.fillStyle = robot().color;
+    ctx.font = '700 11px system-ui, sans-serif';
+    ctx.fillText(`VEZ DE ${robot().name.toUpperCase()} · ${robot().role.toUpperCase()}`, 24, 68);
+
+    ctx.fillStyle = 'rgba(232, 238, 252, 0.55)';
+    ctx.font = '600 10px system-ui, sans-serif';
+    ctx.fillText(`ESPADA ${swordCharges} · ESCUDO ${shieldCharges}`, 24, 86);
 
     ctx.textAlign = 'right';
     ctx.fillStyle = '#ffd166';
@@ -694,6 +864,9 @@
     ctx.fillStyle = 'rgba(232, 238, 252, 0.5)';
     ctx.font = '600 10px system-ui, sans-serif';
     ctx.fillText('PEÇAS', W - 26, 62);
+    ctx.fillStyle = '#ffd166';
+    ctx.font = '600 11px system-ui, sans-serif';
+    ctx.fillText(`PARAFUSOS ${coins}`, W - 26, 82);
 
     ctx.textAlign = 'center';
     ctx.fillStyle = 'rgba(232, 238, 252, 0.7)';
@@ -742,7 +915,7 @@
     fg.addColorStop(0, '#00f0ff');
     fg.addColorStop(1, '#7ff2ff');
     ctx.fillStyle = fg;
-    rr(fx, fy, Math.max(4, fw * (player.fuel / FUEL_MAX)), 8, 4);
+    rr(fx, fy, Math.max(4, fw * (player.fuel / fuelMax)), 8, 4);
     ctx.fill();
 
     ctx.textAlign = 'right';
@@ -750,6 +923,20 @@
     ctx.font = '700 13px system-ui, sans-serif';
     ctx.fillText(player.fuel.toFixed(1) + 's', fx + fw, fy - 9);
     ctx.restore();
+
+    if (paused) {
+      const label = 'LOJA ABERTA · JOGO PAUSADO';
+      ctx.save();
+      ctx.font = '700 12px system-ui, sans-serif';
+      const tw = ctx.measureText(label).width;
+      ctx.fillStyle = 'rgba(6, 9, 22, 0.82)';
+      rr(W / 2 - tw / 2 - 14, 54, tw + 28, 26, 13);
+      ctx.fill();
+      ctx.fillStyle = '#bff8ff';
+      ctx.textAlign = 'center';
+      ctx.fillText(label, W / 2, 71);
+      ctx.restore();
+    }
 
     if (damage > 0) {
       const vg = ctx.createRadialGradient(W / 2, H / 2, H * 0.2, W / 2, H / 2, H * 0.78);
@@ -791,37 +978,38 @@
 
     if (mode === 'ready') {
       panel('MISSÃO', [
-        `Nível ${level} de ${TOTAL_LEVELS} · ${TIER_NAMES[cfg.tier]}`,
+        `Nível ${level} de ${TOTAL_LEVELS} · ${TIER_NAMES[cfg.tier]} · vez de ${robot().name}`,
         `Colete as ${total} peças e chegue ao portal do fim`,
-        'Voe para passar por espinhos, troncos e serras',
-        '3 vidas · 3 segundos de voo por carga',
-        'ESPAÇO para começar'
+        `Voo de ${fuelMax.toFixed(0)}s · ${levelMaxLives} vidas · espada ${swordCharges} · escudo ${shieldCharges}`,
+        'Os 4 robôs jogam em grupo, um por nível',
+        'ESPAÇO para começar · L ou LOJA para melhorar'
       ], 'rgba(0, 240, 255, 0.6)');
     } else if (mode === 'over') {
       panel('FIM DE JOGO', [
-        `Nível ${level} · suas 3 vidas acabaram`,
+        `Nível ${level} · suas vidas acabaram`,
         `Peças: ${collected}/${total} · Distância: ${pct}%`,
-        'ESPAÇO para tentar de novo'
+        'ESPAÇO para tentar de novo · L abre a loja'
       ], 'rgba(255, 46, 136, 0.7)');
     } else if (mode === 'levelclear') {
       const next = level + 1;
       const novoTier = next % 10 === 1 && next <= TOTAL_LEVELS;
       panel(`NÍVEL ${level} CONCLUÍDO`, [
         `${total}/${total} peças · tempo ${elapsed.toFixed(1)}s`,
+        `Parafusos: ${coins} · próxima vez: ${CHARACTERS[(activeRobot + 1) % CHARACTERS.length].name}`,
         novoTier ? `Dificuldade sobe: ${TIER_NAMES[levelConfig(next).tier]}` : `Próximo: nível ${next} de ${TOTAL_LEVELS}`,
-        'ESPAÇO para continuar'
+        'ESPAÇO para continuar · L abre a loja'
       ], 'rgba(255, 209, 102, 0.75)');
     } else if (mode === 'complete') {
       panel('VOCÊ ZEROU O JOGO!', [
-        'Os 50 níveis foram concluídos',
-        'Todos os caminhos, todas as peças',
+        'Os 50 níveis foram concluídos pelo time',
+        'Alice Navarro, Alice Frassi, Livia e Maria Luiza',
         'ESPAÇO para recomeçar do nível 1'
       ], 'rgba(140, 233, 154, 0.8)');
     } else if (mode === 'missing') {
       panel('FALTARAM PEÇAS', [
         `Você chegou ao final com ${collected}/${total} peças`,
         'Volte e colete todas para abrir o portal',
-        'ESPAÇO para tentar de novo'
+        'ESPAÇO para tentar de novo · L abre a loja'
       ], 'rgba(255, 140, 66, 0.75)');
     }
   }
@@ -962,20 +1150,33 @@
     sparks = sparks.filter((s) => s.life > 0);
   }
 
+  function maxLivesForRobot() {
+    return 3 + owned.armor + (robot().id === 'frassi' ? 1 : 0);
+  }
+
   function reset() {
     cfg = levelConfig(level);
-    player.x = 0; player.y = 0; player.z = 0; player.fuel = FUEL_MAX;
+    levelMaxLives = maxLivesForRobot();
+    lives = levelMaxLives;
+    player.x = 0; player.y = 0; player.z = 0; player.fuel = fuelMax;
     cam.x = 0; cam.y = 1.55; cam.z = 0;
-    lives = 3; collected = 0; elapsed = 0; steer = 0;
+    collected = 0; elapsed = 0; steer = 0;
     invuln = 0; damage = 0; shake = 0;
+    swordCharges = owned.sword;
+    shieldCharges = owned.shield + (robot().id === 'maria' ? 1 : 0);
+    slashTime = 0;
     pieces = buildPieces(cfg);
     obstacles = buildObstacles(cfg, pieces);
     sparks = [];
+    setShop(false);
+    syncButtons();
+    highlightRobot();
   }
 
   function startGame() {
     reset();
     mode = 'play';
+    syncButtons();
   }
 
   function nextLevel() {
@@ -984,6 +1185,7 @@
     } else {
       level++;
     }
+    activeRobot = (activeRobot + 1) % CHARACTERS.length;
     startGame();
   }
 
@@ -991,9 +1193,31 @@
     startGame();
   }
 
+  function useSword() {
+    if (mode !== 'play' || paused || swordCharges <= 0) return;
+    slashTime = 0.35;
+    let hit = false;
+    for (const o of obstacles) {
+      if (o.dead) continue;
+      if (o.z < player.z - 1.5 || o.z > player.z + 10) continue;
+      if (Math.abs(o.x - player.x) > 4.4) continue;
+      o.dead = true;
+      hit = true;
+      const pr = P(o.x, 1.2, o.z);
+      if (pr) addSparks(pr.x, pr.y);
+    }
+    if (hit) {
+      swordCharges--;
+      shake = 7;
+      syncButtons();
+    }
+  }
+
   function update(dt) {
+    if (paused) return;
     worldTime += dt;
     updateSparks(dt);
+    if (slashTime > 0) slashTime = Math.max(0, slashTime - dt);
     if (damage > 0) damage = Math.max(0, damage - dt * 1.6);
     if (mode !== 'play') return;
 
@@ -1018,8 +1242,9 @@
       player.y = Math.min(MAX_Y, player.y + 6.5 * dt);
     } else {
       player.y = Math.max(0, player.y - 8 * dt);
-      if (player.y === 0 && player.fuel < FUEL_MAX) {
-        player.fuel = Math.min(FUEL_MAX, player.fuel + 0.85 * dt);
+      if (player.y === 0 && player.fuel < fuelMax) {
+        const recharge = 0.85 * (robot().id === 'livia' ? 1.5 : 1);
+        player.fuel = Math.min(fuelMax, player.fuel + recharge * dt);
       }
     }
 
@@ -1037,21 +1262,33 @@
 
       o.dead = true;
       if (invuln <= 0) {
-        lives--;
-        invuln = 1.4;
-        damage = 1;
-        shake = 13;
-        if (lives <= 0) { mode = 'over'; return; }
+        if (shieldCharges > 0) {
+          shieldCharges--;
+          invuln = 1.0;
+          damage = 0.45;
+          shake = 8;
+        } else {
+          lives--;
+          invuln = 1.4;
+          damage = 1;
+          shake = 13;
+          if (lives <= 0) { mode = 'over'; syncButtons(); return; }
+        }
       }
     }
 
+    const reach = robot().id === 'navarro' ? 2.6 : 1.9;
+    const reachZ = robot().id === 'navarro' ? 2.6 : 2.2;
     for (const p of pieces) {
       if (p.got) continue;
-      if (Math.abs(p.z - player.z) < 2.2 &&
-          Math.abs(p.x - player.x) < 1.9 &&
+      if (Math.abs(p.z - player.z) < reachZ &&
+          Math.abs(p.x - player.x) < reach &&
           Math.abs(p.y - player.y) < 6) {
         p.got = true;
         collected++;
+        coins += COINS_PER_PIECE;
+        syncCoins();
+        saveGame();
         const pr = P(p.x, p.y, p.z);
         if (pr) addSparks(pr.x, pr.y);
       }
@@ -1060,11 +1297,126 @@
     if (player.z >= cfg.length) {
       player.z = cfg.length;
       if (collected >= pieces.length) {
+        coins += COINS_PER_LEVEL;
+        syncCoins();
+        saveGame();
         mode = level >= TOTAL_LEVELS ? 'complete' : 'levelclear';
       } else {
         mode = 'missing';
       }
+      syncButtons();
     }
+  }
+
+  /* ---------------- loja e progresso ---------------- */
+  function highlightRobot() {
+    cards.forEach((card, i) => card.classList.toggle('active', i === activeRobot));
+  }
+
+  function syncButtons() {
+    slashBtn.disabled = !(mode === 'play' && !paused && swordCharges > 0);
+    slashBtn.textContent = swordCharges > 0 ? `Espada ${swordCharges}` : 'Espada';
+  }
+
+  function syncCoins() {
+    coinCount.textContent = coins;
+    shopCoins.textContent = coins;
+  }
+
+  function saveGame() {
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify({ coins, owned }));
+    } catch (e) { /* armazenamento indisponível */ }
+  }
+
+  function loadGame() {
+    try {
+      const raw = localStorage.getItem(SAVE_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      if (Number.isFinite(data.coins)) coins = Math.max(0, Math.floor(data.coins));
+      if (data.owned) {
+        for (const key of Object.keys(owned)) {
+          const item = SHOP_ITEMS.find((it) => it.id === key);
+          const value = Number(data.owned[key]);
+          if (item && Number.isFinite(value)) {
+            owned[key] = clamp(Math.floor(value), 0, item.max);
+          }
+        }
+      }
+    } catch (e) { /* sem save */ }
+    applyUpgrades();
+  }
+
+  function applyUpgrades() {
+    fuelMax = FLY_BASE + (owned.wing > 0 ? FLY_WING_BONUS : 0);
+    player.fuel = Math.min(player.fuel, fuelMax);
+    levelMaxLives = maxLivesForRobot();
+  }
+
+  function stockText(item) {
+    if (item.id === 'life') return 'Consumível';
+    if (item.id === 'wing') return owned.wing ? 'Asa instalada' : 'Asa padrão';
+    return `${owned[item.id]} de ${item.max} por nível`;
+  }
+
+  function itemStatus(item) {
+    if (item.id === 'life') {
+      if (mode !== 'play') return { label: 'Só no nível', disabled: true };
+      if (lives >= levelMaxLives) return { label: 'Vida cheia', disabled: true };
+      if (coins < item.price) return { label: 'Sem saldo', disabled: true };
+      return { label: 'Comprar', disabled: false };
+    }
+    if (owned[item.id] >= item.max) return { label: 'Máximo', disabled: true };
+    if (coins < item.price) return { label: 'Sem saldo', disabled: true };
+    return { label: 'Comprar', disabled: false };
+  }
+
+  function updateShop() {
+    shopGrid.innerHTML = SHOP_ITEMS.map((item) => {
+      const status = itemStatus(item);
+      return `
+        <article class="item">
+          <h3>${item.name}</h3>
+          <span class="price">${item.price} parafusos</span>
+          <span class="owned">${stockText(item)}</span>
+          <p>${item.desc}</p>
+          <button class="buy" type="button" data-buy="${item.id}" ${status.disabled ? 'disabled' : ''}>${status.label}</button>
+        </article>`;
+    }).join('');
+    shopGrid.querySelectorAll('[data-buy]').forEach((btn) => {
+      btn.addEventListener('click', () => buyItem(btn.getAttribute('data-buy')));
+    });
+    syncCoins();
+  }
+
+  function buyItem(id) {
+    const item = SHOP_ITEMS.find((it) => it.id === id);
+    if (!item || coins < item.price) return;
+
+    if (id === 'life') {
+      if (mode !== 'play' || lives >= levelMaxLives) return;
+      coins -= item.price;
+      lives++;
+    } else {
+      if (owned[id] >= item.max) return;
+      coins -= item.price;
+      owned[id]++;
+    }
+
+    if (id === 'wing') applyUpgrades();
+    if (id === 'armor') levelMaxLives = maxLivesForRobot();
+    saveGame();
+    updateShop();
+    syncButtons();
+  }
+
+  function setShop(open) {
+    paused = open;
+    shopPanel.hidden = !open;
+    shopToggle.textContent = open ? 'Fechar loja' : 'Loja do time';
+    if (open) updateShop();
+    syncButtons();
   }
 
   /* ---------------- entrada ---------------- */
@@ -1076,7 +1428,7 @@
 
   function advance() {
     if (mode === 'levelclear') nextLevel();
-    else if (mode === 'complete') { level = 1; startGame(); }
+    else if (mode === 'complete') { level = 1; activeRobot = 0; startGame(); }
     else startGame();
   }
 
@@ -1085,6 +1437,8 @@
       e.preventDefault();
     }
     keys.add(e.code);
+    if (!e.repeat && e.code === 'KeyX') useSword();
+    if (!e.repeat && e.code === 'KeyL') setShop(shopPanel.hidden);
     if ((e.code === 'Space' || e.code === 'Enter') && mode !== 'play') advance();
   });
   window.addEventListener('keyup', (e) => keys.delete(e.code));
@@ -1114,6 +1468,12 @@
   flyBtn.addEventListener('pointercancel', stopFly);
   flyBtn.addEventListener('pointerleave', stopFly);
 
+  slashBtn.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    useSword();
+  });
+  shopToggle.addEventListener('click', () => setShop(shopPanel.hidden));
+
   /* ---------------- loop ---------------- */
   function resize() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -1134,8 +1494,11 @@
     requestAnimationFrame(frame);
   }
 
+  loadGame();
   reset();
   mode = 'ready';
+  updateShop();
+  syncCoins();
   resize();
   window.addEventListener('resize', resize);
   requestAnimationFrame(frame);

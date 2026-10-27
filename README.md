@@ -8,7 +8,18 @@ Projeto de robótica do Fundamental 1.
 
 ## Objetivo
 
-Corrida em **primeira pessoa** em 3D por um mundo robótico. Em cada nível é preciso **caçar todas as peças** espalhadas pelo caminho e chegar ao portal do fim. O robô tem **3 vidas** e **3 segundos de voo** por carga — sem voar não dá para passar pelos obstáculos.
+Corrida em **primeira pessoa** em 3D por um mundo robótico. Em cada nível é preciso **caçar todas as peças** espalhadas pelo caminho e chegar ao portal do fim. O robô começa com **3 vidas** e tem **5 segundos de voo** por carga — sem voar não dá para passar pelos obstáculos. Com a **asa nova** da loja, o voo passa a durar 8 segundos.
+
+## Regra do grupo
+
+Todas as pessoas do time jogam juntas: os **4 robôs se revezam**, um por nível. Os quatro precisam ajudar a equipe a chegar ao nível 50. Cada robô tem um poder de equipe:
+
+| Robô | Cor | Personalidade | Poder |
+| --- | --- | --- | --- |
+| Alice Navarro | verde-água | inteligente | enxerga e coleta as peças de mais longe |
+| Alice Frassi | rosa | carinhosa | começa cada nível com 1 vida extra |
+| Livia Furlan | verde-claro | gentil | recarrega o voo mais rápido |
+| Maria Luiza | roxa | forte | começa cada nível com 1 escudo extra |
 
 ## Níveis
 
@@ -29,22 +40,27 @@ Obstáculos:
 - **Troncos** — troncos caídos atravessando a pista
 - **Campo de espinhos** — trecho longo que só passa voando
 
+## Loja do time
+
+Os **parafusos** são a moeda do jogo: cada peça coletada vale 2 parafusos e cada nível concluído dá mais 25. As compras ficam salvas no navegador.
+
+| Item | Efeito |
+| --- | --- |
+| Espada | 1 golpe por nível para cada espada comprada (tecla X) |
+| Escudo | cada escudo bloqueia 1 batida por nível |
+| Armadura | +1 vida no começo de todos os níveis |
+| Vida extra | recupera 1 vida na hora, durante o nível |
+| Asa nova | aumenta o voo de 5 para 8 segundos |
+
 ## Controles
 
 | Ação | Teclado | Celular |
 | --- | --- | --- |
 | Desviar | ← → ou A D | arrastar na tela |
-| Voar (3 s) | ESPAÇO / ↑ / W | segurar o botão VOAR |
+| Voar (5 s) | ESPAÇO / ↑ / W | segurar o botão VOAR |
+| Espada | X | botão ESPADA |
+| Abrir / fechar loja | L | botão LOJA DO TIME |
 | Começar / continuar | ESPAÇO | tocar na tela |
-
-## Personagens
-
-| Robô | Papel |
-| --- | --- |
-| Bit | Explorador (o jogador) |
-| Lumi | Comunicadora |
-| Bolt | Construtor |
-| Zeta | Programadora |
 
 ## Criado por
 
